@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Звіти — Білетний відділ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="../styles.css">
+
+<style>
+.page-wrap{
+  padding:20px;
+  max-width:1400px;
+  margin:auto;
+}
+.card{
+  background:#fff;
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:16px;
+  box-shadow:0 4px 14px rgba(0,0,0,.06);
+}
+h1{margin-bottom:6px}
+.badge{
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  background:#e5e7eb;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:14px;
+}
+.report-card{
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:14px;
+  background:#f9fafb;
+}
+.report-card h3{
+  margin:0 0 6px;
+  font-size:16px;
+}
+.report-card p{
+  font-size:13px;
+  color:#4b5563;
+  margin:0 0 10px;
+}
+.btn{
+  padding:8px 12px;
+  border-radius:10px;
+  border:none;
+  font-weight:700;
+  cursor:pointer;
+}
+.btn-primary{
+  background:#111827;
+  color:#fff;
+}
+.btn-ghost{
+  background:#e5e7eb;
+}
+</style>
+</head>
+
+<body>
+
+<!-- admin header -->
+<div id="admin-header"></div>
+
+<main class="page-wrap">
+  <h1>📊 Звіти</h1>
+  <span class="badge">Продажі · бронювання · каса · онлайн</span>
+
+  <!-- Sales -->
+  <div class="card">
+    <h2>Продажі</h2>
+
+    <div class="grid">
+      <div class="report-card">
+        <h3>Звіт продажів</h3>
+        <p>Усі продажі за період (каса + онлайн)</p>
+        <button class="btn btn-primary" onclick="openReport('sales')">
+          Відкрити
+        </button>
+      </div>
+
+      <div class="report-card">
+        <h3>Продажі по сеансу</h3>
+        <p>Список квитків конкретного сеансу</p>
+        <button class="btn btn-primary" onclick="openReport('sales-seance')">
+          Відкрити
+        </button>
+      </div>
+
+      <div class="report-card">
+        <h3>Безготівкові продажі</h3>
+        <p>Онлайн + білетний відділ</p>
+        <button class="btn btn-primary" onclick="openReport('cashless')">
+          Відкрити
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cash -->
+  <div class="card">
+    <h2>Каса</h2>
+
+    <div class="grid">
+      <div class="report-card">
+        <h3>Журнал каси</h3>
+        <p>Усі операції касира</p>
+        <button class="btn btn-primary" onclick="openReport('cash-log')">
+          Відкрити
+        </button>
+      </div>
+
+      <div class="report-card">
+        <h3>Z-звіт</h3>
+        <p>Підсумок за зміну / день</p>
+        <button class="btn btn-primary" onclick="openReport('z-report')">
+          Відкрити
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reservations -->
+  <div class="card">
+    <h2>Бронювання</h2>
+
+    <div class="grid">
+      <div class="report-card">
+        <h3>Активні броні</h3>
+        <p>Поточні заброньовані місця</p>
+        <button class="btn btn-primary" onclick="openReport('active-bookings')">
+          Відкрити
+        </button>
+      </div>
+
+      <div class="report-card">
+        <h3>Історія бронювань</h3>
+        <p>Завершені та скасовані броні</p>
+        <button class="btn btn-primary" onclick="openReport('booking-history')">
+          Відкрити
+        </button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+fetch("../index.html")
+  .then(r=>r.text())
+  .then(html=>{
+    document.getElementById("admin-header").innerHTML = html;
+  });
+
+function openReport(type){
+  alert("Звіт: " + type + "\n(логіка буде підключена у продукті)");
+}
+</script>
+
+</body>
+</html>
