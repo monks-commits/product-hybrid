@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Каса — Продаж квитків</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="../../styles.css">
+
+<style>
+html,body{
+  margin:0;
+  padding:0;
+  height:100%;
+  background:#f3f4f6;
+}
+.layout{
+  display:flex;
+  height:100vh;
+  overflow:hidden;
+}
+.hall-wrap{
+  flex:1;
+  background:#fff;
+}
+.sidebar{
+  width:360px;
+  background:#111827;
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  padding:16px;
+}
+h1{
+  font-size:18px;
+  margin:0 0 12px;
+}
+.meta{
+  font-size:13px;
+  opacity:.8;
+  margin-bottom:10px;
+}
+.box{
+  background:#1f2937;
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:12px;
+}
+.box h3{
+  margin:0 0 6px;
+  font-size:14px;
+}
+.list{
+  font-size:13px;
+  line-height:1.4;
+}
+.total{
+  font-size:18px;
+  font-weight:800;
+  margin-top:6px;
+}
+.actions{
+  margin-top:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+button{
+  border:none;
+  border-radius:12px;
+  padding:14px;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+}
+.btn-sell{background:#fca5a5;color:#111827;}
+.btn-print{background:#bbf7d0;color:#111827;}
+.btn-clear{background:#374151;color:#fff;}
+iframe{
+  width:100%;
+  height:100%;
+  border:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+  <!-- HALL -->
+  <div class="hall-wrap">
+    <!-- embed=1 → без сайдбаров -->
+    <iframe src="../../cash/hall-cash.html?embed=1"></iframe>
+  </div>
+
+  <!-- CASHIER -->
+  <aside class="sidebar">
+    <h1>🎟 Каса</h1>
+    <div class="meta">Продаж готівка / термінал</div>
+
+    <div class="box">
+      <h3>Обрані місця</h3>
+      <div id="seatList" class="list">—</div>
+    </div>
+
+    <div class="box">
+      <h3>Сума</h3>
+      <div id="total" class="total">0 грн</div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-sell" onclick="sell()">ПРОДАТИ</button>
+      <button class="btn-print" onclick="print()">ДРУК</button>
+      <button class="btn-clear" onclick="clearAll()">ОЧИСТИТИ</button>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+let basket = [];
+
+window.addEventListener("message", (ev)=>{
+  if(!ev.data || ev.data.source!=="hall-cash") return;
+
+  if(ev.data.type==="basket:update"){
+    basket = ev.data.payload.seats || [];
+    render();
+  }
+});
+
+function render(){
+  const list = document.getElementById("seatList");
+  const total = document.getElementById("total");
+
+  if(!basket.length){
+    list.textContent = "—";
+    total.textContent = "0 грн";
+    return;
+  }
+
+  list.innerHTML = basket.map(s=>`• ${s}`).join("<br>");
+  total.textContent = basket.length * 200 + " грн"; // ⚠️ временно
+}
+
+function sell(){
+  if(!basket.length){
+    alert("Немає вибраних місць");
+    return;
+  }
+  alert("Продано: " + basket.join(", "));
+  clearAll();
+}
+
+function print(){
+  if(!basket.length){
+    alert("Немає місць для друку");
+    return;
+  }
+  window.print();
+}
+
+function clearAll(){
+  basket = [];
+  render();
+  // сообщаем залу
+  window.postMessage({ source:"cashier", type:"clear" }, "*");
+}
+</script>
+
+</body>
+</html>
