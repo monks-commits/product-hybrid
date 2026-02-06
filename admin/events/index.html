@@ -2,188 +2,214 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<title>Події — Білетний відділ</title>
+<title>Події — білетний відділ</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link rel="stylesheet" href="../styles.css">
 
 <style>
 .page-wrap{
-  padding:20px;
-  max-width:1400px;
-  margin:auto;
-}
-.card{
-  background:#fff;
-  border-radius:14px;
   padding:16px;
-  margin-bottom:16px;
-  box-shadow:0 4px 14px rgba(0,0,0,.06);
+  max-width:100%;
 }
-h1{margin-bottom:6px}
-.row{
+.top-row{
   display:flex;
   gap:12px;
-  flex-wrap:wrap;
   align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:12px;
 }
+select,button{
+  padding:8px 12px;
+  border-radius:8px;
+  border:1px solid #d1d5db;
+  font-size:14px;
+}
+.btn{
+  border:none;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+}
+.btn-primary{background:#111827;color:#fff}
+.btn-ghost{background:#f3f4f6}
 .badge{
   padding:4px 10px;
   border-radius:999px;
   font-size:12px;
   background:#e5e7eb;
 }
-table{
+
+.layout{
+  display:flex;
+  gap:12px;
+}
+.hall-wrap{
+  flex:1 1 auto;
+  min-width:0;
+}
+.sidebar{
+  width:360px;
+  flex:0 0 360px;
+  background:#fff;
+  border-radius:14px;
+  padding:14px;
+  box-shadow:0 4px 14px rgba(0,0,0,.06);
+}
+
+iframe{
   width:100%;
-  border-collapse:collapse;
-  font-size:14px;
-}
-th,td{
-  padding:10px 12px;
-  border-bottom:1px solid #e5e7eb;
-  text-align:left;
-}
-th{
+  height:calc(100vh - 180px);
+  border:1px solid #e5e7eb;
+  border-radius:14px;
   background:#f9fafb;
-  font-weight:700;
 }
-.btn{
-  padding:8px 12px;
-  border-radius:10px;
+
+.action-btn{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
   border:none;
-  font-weight:700;
+  font-size:15px;
+  font-weight:800;
   cursor:pointer;
 }
-.btn-primary{
-  background:#111827;
-  color:#fff;
+.sell{background:#bbf7d0}
+.reserve{background:#fed7aa}
+.print{background:#e5e7eb}
+
+.meta{
+  font-size:13px;
+  color:#374151;
+  margin-bottom:8px;
 }
-.btn-ghost{
-  background:#f3f4f6;
+.sep{
+  height:1px;
+  background:#e5e7eb;
+  margin:12px 0;
 }
-.status{
-  padding:4px 8px;
-  border-radius:999px;
-  font-size:12px;
-  display:inline-block;
-}
-.status-active{background:#dcfce7;color:#166534}
-.status-draft{background:#fef3c7;color:#92400e}
-.status-closed{background:#fee2e2;color:#991b1b}
-.actions{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
+
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .sidebar{width:auto}
+  iframe{height:60vh}
 }
 </style>
 </head>
 
 <body>
 
-<!-- общая админ-шапка -->
 <div id="admin-header"></div>
 
 <main class="page-wrap">
-  <h1>📅 Події</h1>
-  <span class="badge">Оперативна робота · активні сеанси</span>
 
-  <!-- Active seances -->
-  <div class="card">
-    <h3>Активні сеанси</h3>
+  <h1>🎟 Події</h1>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Подія</th>
-          <th>Дата / Час</th>
-          <th>Статус</th>
-          <th>Дії</th>
-        </tr>
-      </thead>
-      <tbody>
+  <!-- Top controls -->
+  <div class="top-row">
+    <label>
+      Активний сеанс
+      <select id="seanceSelect">
+        <option value="">— обрати —</option>
+      </select>
+    </label>
 
-        <!-- пример строки -->
-        <tr>
-          <td>Концерт</td>
-          <td>10.02.2026 · 19:00</td>
-          <td>
-            <span class="status status-active">активний</span>
-          </td>
-          <td>
-            <div class="actions">
-              <button class="btn btn-primary"
-                onclick="openSales('koncert-2026-02-10-19-00')">
-                Продажі
-              </button>
-              <button class="btn btn-ghost"
-                onclick="openCreate('koncert-2026-02-10-19-00')">
-                Редагувати
-              </button>
-              <button class="btn btn-ghost"
-                onclick="closeSeance()">
-                Закрити
-              </button>
-            </div>
-          </td>
-        </tr>
+    <span class="badge" id="seanceStatus">не обрано</span>
 
-        <!-- дальше будет автогенерация -->
-      </tbody>
-    </table>
+    <button class="btn btn-primary" id="btnOpenHall">
+      Відкрити зал
+    </button>
   </div>
 
-  <!-- Drafts -->
-  <div class="card">
-    <h3>Чернетки</h3>
+  <div class="layout">
 
-    <table>
-      <thead>
-        <tr>
-          <th>Подія</th>
-          <th>Дата</th>
-          <th>Статус</th>
-          <th>Дії</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Вистава</td>
-          <td>—</td>
-          <td>
-            <span class="status status-draft">чернетка</span>
-          </td>
-          <td>
-            <button class="btn btn-primary"
-              onclick="openCreate('draft')">
-              Продовжити створення
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- HALL -->
+    <div class="hall-wrap">
+      <iframe
+        id="hallFrame"
+        src=""
+        allow="fullscreen"
+      ></iframe>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <h3>Продажі / дії</h3>
+
+      <div class="meta" id="metaInfo">
+        Сеанс: —
+      </div>
+
+      <button class="action-btn sell" id="btnSell" disabled>
+        ПРОДАТИ (безнал)
+      </button>
+
+      <button class="action-btn reserve" id="btnReserve" disabled>
+        У РЕЗЕРВ
+      </button>
+
+      <button class="action-btn print" id="btnPrint" disabled>
+        ДРУК ПАЧКОЮ
+      </button>
+
+      <div class="sep"></div>
+
+      <div class="meta">
+        Журнал подій сеансу
+      </div>
+
+      <div style="font-size:12px;color:#6b7280">
+        (тут буде лог операцій)
+      </div>
+    </aside>
+
   </div>
-
 </main>
 
 <script>
-/* общая админ-шапка */
+/* ===== HEADER ===== */
 fetch("../index.html")
   .then(r=>r.text())
   .then(html=>{
     document.getElementById("admin-header").innerHTML = html;
   });
 
-function openSales(seanceId){
-  location.href = `../sales/index.html?seance=${encodeURIComponent(seanceId)}`;
-}
+/* ===== MOCK DATA (пока) ===== */
+const seances = [
+  { id:"koncert-2026-02-10-19-00", title:"Концерт • 10.02 19:00" },
+  { id:"vistava-2026-02-11-18-00", title:"Вистава • 11.02 18:00" }
+];
 
-function openCreate(seanceId){
-  location.href = `../create/index.html?seance=${encodeURIComponent(seanceId)}`;
-}
+const select = document.getElementById("seanceSelect");
+const frame  = document.getElementById("hallFrame");
+const status = document.getElementById("seanceStatus");
+const meta   = document.getElementById("metaInfo");
 
-function closeSeance(){
-  alert("Закриття сеансу — логіка буде підключена пізніше");
-}
+seances.forEach(s=>{
+  const o = document.createElement("option");
+  o.value = s.id;
+  o.textContent = s.title;
+  select.appendChild(o);
+});
+
+document.getElementById("btnOpenHall").onclick = ()=>{
+  const id = select.value;
+  if(!id) return alert("Оберіть сеанс");
+
+  status.textContent = "активний";
+  meta.textContent = "Сеанс: " + id;
+
+  frame.src = `../../hall.html?seance=${id}&embed=1`;
+
+  document.getElementById("btnSell").disabled = false;
+  document.getElementById("btnReserve").disabled = false;
+  document.getElementById("btnPrint").disabled = false;
+};
+
+/* Заглушки действий */
+btnSell.onclick    = ()=>alert("Продаж (безнал) — логіка тут");
+btnReserve.onclick = ()=>alert("Резерв — логіка тут");
+btnPrint.onclick   = ()=>alert("Друк пачкою — логіка тут");
 </script>
 
 </body>
