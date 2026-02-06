@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Продажі — Білетний відділ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="../styles.css">
+
+<style>
+.page-wrap{
+  padding:20px;
+  max-width:1400px;
+  margin:auto;
+}
+.card{
+  background:#fff;
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:16px;
+  box-shadow:0 4px 14px rgba(0,0,0,.06);
+}
+h1{margin-bottom:8px}
+.row{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+select,button{
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid #d1d5db;
+  font-size:14px;
+}
+button{
+  cursor:pointer;
+  font-weight:700;
+}
+.btn-primary{
+  background:#111827;
+  color:#fff;
+  border:none;
+}
+.btn-ghost{
+  background:#f3f4f6;
+}
+iframe{
+  width:100%;
+  height:calc(100vh - 260px);
+  border:none;
+  border-radius:14px;
+  background:#f9fafb;
+}
+.badge{
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  background:#e5e7eb;
+}
+</style>
+</head>
+
+<body>
+
+<!-- общая админ-шапка -->
+<div id="admin-header"></div>
+
+<main class="page-wrap">
+  <h1>🎟 Продажі</h1>
+  <span class="badge">Білетний відділ · безготівка · друк партіями</span>
+
+  <!-- 1. Выбор сеанса -->
+  <div class="card">
+    <h3>1️⃣ Активний сеанс</h3>
+    <div class="row">
+      <select id="seanceSelect">
+        <option value="">Вибрати сеанс…</option>
+        <!-- позже заполняется из Supa / json -->
+        <option value="koncert-2026-02-10-19-00">
+          Концерт · 10.02.2026 · 19:00
+        </option>
+      </select>
+
+      <button class="btn-ghost" onclick="reloadHall()">Оновити зал</button>
+    </div>
+  </div>
+
+  <!-- 2. Hall -->
+  <div class="card">
+    <h3>2️⃣ Схема залу</h3>
+
+    <!-- ВАЖНО:
+         admin использует hall.html
+         embed=1 — без шапки сайта
+         seance передаём параметром
+    -->
+    <iframe
+      id="hallFrame"
+      src=""
+    ></iframe>
+  </div>
+
+  <!-- 3. Actions -->
+  <div class="card">
+    <h3>3️⃣ Дії</h3>
+    <div class="row">
+      <button class="btn-primary">💳 Продати (безготівка)</button>
+      <button class="btn-ghost">🖨 Друк обраних</button>
+      <button class="btn-ghost">🧾 Друк партією</button>
+    </div>
+  </div>
+</main>
+
+<script>
+/* подключаем общую шапку админа */
+fetch("../index.html")
+  .then(r => r.text())
+  .then(html => {
+    document.getElementById("admin-header").innerHTML = html;
+  });
+
+const seanceSelect = document.getElementById("seanceSelect");
+const hallFrame = document.getElementById("hallFrame");
+
+function reloadHall(){
+  const seance = seanceSelect.value;
+  if(!seance){
+    alert("Оберіть сеанс");
+    return;
+  }
+
+  hallFrame.src =
+    `../../site/hall.html?embed=1&seance=${encodeURIComponent(seance)}`;
+}
+
+/* автозагрузка при выборе */
+seanceSelect.addEventListener("change", reloadHall);
+</script>
+
+</body>
+</html>
